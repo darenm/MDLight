@@ -13,21 +13,54 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <CommandBar x:Name="PrimaryCommandBar" IsOpen="False" DefaultLabelPosition="Right" HorizontalAlignment="Left">
-            <AppBarButton x:Name="addButton" Icon="Add" Label="Add" Click="OnElementClicked"/>
-            <AppBarButton x:Name="openButton" Icon="OpenFile" Label="Add" Click="OnElementClicked"/>
-            <AppBarButton x:Name="editButton" Icon="Edit" Label="Edit" Click="OnElementClicked"/>
-            <AppBarButton x:Name="saveButton" Icon="Save" Label="Save" Click="OnElementClicked"/>
+        <Grid x:Name="AppTitleBar"  
+      Height="48">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>
+                <ColumnDefinition x:Name="IconColumn" Width="Auto"/>
+                <ColumnDefinition x:Name="TitleColumn" Width="Auto"/>
+                <ColumnDefinition x:Name="LeftDragColumn" Width="*"/>
+                <ColumnDefinition x:Name="SearchColumn" Width="Auto"/>
+                <ColumnDefinition x:Name="RightDragColumn" Width="*"/>
+                <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
+            </Grid.ColumnDefinitions>
+            <SymbolIcon Symbol="Document" Grid.Column="1"
+                Margin="8,0,0,0"/>
+            <TextBlock x:Name="TitleTextBlock" 
+               Text="App title" 
+               Style="{StaticResource CaptionTextBlockStyle}"
+               Grid.Column="2"
+               VerticalAlignment="Center"
+               Margin="4,0,0,0"/>
+            <AutoSuggestBox Grid.Column="4" QueryIcon="Find"
+                    PlaceholderText="Search"
+                    VerticalAlignment="Center"
+                    Width="260" Margin="4,0"/>
+        </Grid>
+        <CommandBar Grid.Row="1" x:Name="PrimaryCommandBar" IsOpen="False" DefaultLabelPosition="Right" HorizontalAlignment="Left">
+            <AppBarButton x:Name="addButton" Label="Add" Click="OnElementClicked">
+                <SymbolIcon Symbol="Add" />
+            </AppBarButton>
+            <AppBarButton x:Name="openButton" Label="Open" Click="OnElementClicked">
+                <SymbolIcon Symbol="OpenFile" Foreground="Orange" />
+            </AppBarButton>
+            <AppBarButton x:Name="editButton" Label="Edit" Click="OnElementClicked">
+                <SymbolIcon Symbol="Edit" Foreground="LightGreen"/>
+            </AppBarButton>
+            <AppBarButton x:Name="saveButton"  Label="Save" Click="OnElementClicked">
+                <SymbolIcon Symbol="Save" Foreground="CornflowerBlue"/>
+            </AppBarButton>
         </CommandBar>
-        <CommandBar x:Name="SecondaryCommandBar" IsOpen="False" DefaultLabelPosition="Right" HorizontalAlignment="Right">
+        <CommandBar  Grid.Row="1" x:Name="SecondaryCommandBar" IsOpen="False" DefaultLabelPosition="Right" HorizontalAlignment="Right">
             <AppBarButton x:Name="settingsButton" Icon="Setting" Label="Settings" Click="OnElementClicked" HorizontalAlignment="Right"/>
         </CommandBar>
 
 
-        <TabView Grid.Row="1" SelectedIndex="0" AddTabButtonClick="TabView_AddButtonClick" TabCloseRequested="TabView_TabCloseRequested">
+        <TabView Grid.Row="2" SelectedIndex="0" AddTabButtonClick="TabView_AddButtonClick" TabCloseRequested="TabView_TabCloseRequested">
             <TabView.TabItems>
                 <TabViewItem Header="Document 0">
                     <TabViewItem.IconSource>
