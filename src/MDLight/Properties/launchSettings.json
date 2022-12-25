@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "MDLight (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "MDLight (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
