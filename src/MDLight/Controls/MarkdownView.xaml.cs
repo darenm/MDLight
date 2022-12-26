@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
+using MDLight.Models;
+
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -26,6 +28,15 @@ namespace MDLight.Controls
         public MarkdownView()
         {
             this.InitializeComponent();
+            this.Loaded += MarkdownView_Loaded;
+        }
+
+        private void MarkdownView_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (Tag is Document document)
+            {
+                Content.Text = document.Contents;
+            }
         }
     }
 }

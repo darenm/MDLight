@@ -172,4 +172,12 @@ public static partial class WindowHelper
             NativeMethods.SwitchToThisWindow(GetWindowHandleForCurrentWindow(target), true);
         }
     }
+
+    public static void InitializeWithWindow(object target, object toInitialize)
+    {
+        if (target != null && toInitialize != null)
+        {
+            WinRT.Interop.InitializeWithWindow.Initialize(toInitialize, GetWindowHandleForCurrentWindow(target));
+        }
+    }
 }

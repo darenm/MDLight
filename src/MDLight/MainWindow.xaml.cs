@@ -6,7 +6,6 @@ using MDLight.Utilities;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -27,26 +26,6 @@ namespace MDLight
             SetupWindow();
             SetupTitle();
             SetupBackdrop();
-        }
-
-
-        private void myButton_Click(object sender, RoutedEventArgs e)
-        {
-            //myButton.Content = "Clicked";
-        }
-
-        private void TabView_AddButtonClick(TabView sender, object args)
-        {
-        }
-
-        private void TabView_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
-        {
-
-        }
-
-        private void OnElementClicked(object sender, RoutedEventArgs e)
-        {
-
         }
 
         #region Setup   
@@ -104,8 +83,12 @@ namespace MDLight
             return false;
         }
 
-        #endregion Setup
+        private void MainPage_ThemeChanged(object sender, ElementTheme e)
+        {
+            RootGrid.RequestedTheme = e;
+        }
 
+        #endregion Setup
     }
 }
 

@@ -12,6 +12,8 @@
     mc:Ignorable="d">
 
     <Grid>
-
+        <ScrollViewer Padding="8">
+            <TextBlock x:Name="Content" TextWrapping="Wrap"/>
+        </ScrollViewer>
     </Grid>
 </UserControl>

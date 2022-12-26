@@ -10,6 +10,10 @@ using Microsoft.UI.Xaml;
 using System.Collections.Generic;
 using WinRT.Interop;
 using System.Runtime.InteropServices;
+using MDLight.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Windows.UI.Core;
+using MDLight.Utilities;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -21,10 +25,50 @@ public sealed partial class TitleBarControl : UserControl
 {
     private MainWindow _mainWindow;
     private AppWindow _appWindow;
+    private INavigationService _navigationService;
 
     public TitleBarControl()
     {
         this.InitializeComponent();
+        _navigationService = ((App)App.Current).Services.GetService<INavigationService>();
+        _navigationService.PropertyChanged += _navigationService_PropertyChanged;
+        this.ActualThemeChanged += TitleBarControl_ActualThemeChanged;
+    }
+
+    private void TitleBarControl_ActualThemeChanged(FrameworkElement sender, object args)
+    {
+        if (AppWindowTitleBar.IsCustomizationSupported())
+        {
+            var titleBar = _appWindow.TitleBar;
+
+            if (ActualTheme == ElementTheme.Light)
+            {
+                titleBar.ButtonBackgroundColor = Colors.Transparent;
+                titleBar.ButtonForegroundColor = Colors.Black;
+                SettingsHelper.SetSetting(AppSettings.AppTheme, "Light");
+            }
+            else
+            {
+                titleBar.ButtonBackgroundColor = Colors.Transparent;
+                titleBar.ButtonForegroundColor = Colors.White;
+                SettingsHelper.SetSetting(AppSettings.AppTheme, "Dark");
+            }
+        }
+    }
+
+    private void _navigationService_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(_navigationService.CanGoBack))
+        {
+            BackButton.Visibility = _navigationService.CanGoBack ? Visibility.Visible : Visibility.Collapsed;
+            //LeftPaddingColumn.Width = _navigationService.CanGoBack ? GridLength.Auto : new GridLength(0);
+            LeftPaddingColumn.Width = _navigationService.CanGoBack ? GridLength.Auto : new GridLength(0);
+            AppTitleBar.UpdateLayout();
+            if (AppWindowTitleBar.IsCustomizationSupported())
+            {
+                SetDragRegionForCustomTitleBar(_appWindow);
+            }
+        }
     }
 
     internal void SetupTitlebar(
@@ -43,8 +87,18 @@ public sealed partial class TitleBarControl : UserControl
             AppTitleBar.Loaded += AppTitleBar_Loaded;
             AppTitleBar.SizeChanged += AppTitleBar_SizeChanged;
 
-            titleBar.ButtonBackgroundColor = Colors.Transparent;
-            titleBar.ButtonForegroundColor = Colors.White;
+            if (ActualTheme == ElementTheme.Light)
+            {
+                titleBar.ButtonBackgroundColor = Colors.Transparent;
+                titleBar.ButtonForegroundColor = Colors.Black;
+                SettingsHelper.SetSetting(AppSettings.AppTheme, "Light");
+            }
+            else
+            {
+                titleBar.ButtonBackgroundColor = Colors.Transparent;
+                titleBar.ButtonForegroundColor = Colors.White;
+                SettingsHelper.SetSetting(AppSettings.AppTheme, "Dark");
+            }
         }
         else
         {
@@ -85,7 +139,14 @@ public sealed partial class TitleBarControl : UserControl
             double scaleAdjustment = GetScaleAdjustment();
 
             RightPaddingColumn.Width = new GridLength(appWindow.TitleBar.RightInset / scaleAdjustment);
-            LeftPaddingColumn.Width = new GridLength(appWindow.TitleBar.LeftInset / scaleAdjustment);
+            if (BackButton.Visibility == Visibility.Visible)
+            {
+                LeftPaddingColumn.Width = new GridLength((appWindow.TitleBar.LeftInset / scaleAdjustment) + BackButton.Width + BackButton.Margin.Left + BackButton.Margin.Right);
+            }
+            else
+            {
+                LeftPaddingColumn.Width = new GridLength(appWindow.TitleBar.LeftInset / scaleAdjustment);
+            }
 
             List<Windows.Graphics.RectInt32> dragRectsList = new();
 
@@ -181,5 +242,11 @@ public sealed partial class TitleBarControl : UserControl
                 _appWindow.SetPresenter(newPresenterKind);
             }
         }
+    }
+
+    private void OnGoBackClicked(object sender, RoutedEventArgs e)
+    {
+        _navigationService.CanGoBack = false;
+        _navigationService?.RaiseOnBackButtonClicked(this, EventArgs.Empty);
     }
 }

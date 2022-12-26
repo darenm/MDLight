@@ -20,6 +20,8 @@
             <ColumnDefinition x:Name="RightDragColumn" Width="*"/>
             <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
         </Grid.ColumnDefinitions>
+        <Button x:Name="BackButton" Margin="8,0,0,0" Grid.Column="0" Style="{StaticResource NavigationBackButtonNormalStyle}" Click="OnGoBackClicked" Visibility="Collapsed"/>
+
         <SymbolIcon Symbol="Document" Grid.Column="1"
                 Margin="8,0,0,0"/>
         <TextBlock x:Name="TitleTextBlock" 
