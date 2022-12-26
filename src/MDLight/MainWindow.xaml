@@ -17,30 +17,8 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid x:Name="AppTitleBar"  
-      Height="48">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>
-                <ColumnDefinition x:Name="IconColumn" Width="Auto"/>
-                <ColumnDefinition x:Name="TitleColumn" Width="Auto"/>
-                <ColumnDefinition x:Name="LeftDragColumn" Width="*"/>
-                <ColumnDefinition x:Name="SearchColumn" Width="Auto"/>
-                <ColumnDefinition x:Name="RightDragColumn" Width="*"/>
-                <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
-            </Grid.ColumnDefinitions>
-            <SymbolIcon Symbol="Document" Grid.Column="1"
-                Margin="8,0,0,0"/>
-            <TextBlock x:Name="TitleTextBlock" 
-               Text="App title" 
-               Style="{StaticResource CaptionTextBlockStyle}"
-               Grid.Column="2"
-               VerticalAlignment="Center"
-               Margin="4,0,0,0"/>
-            <AutoSuggestBox Grid.Column="4" QueryIcon="Find"
-                    PlaceholderText="Search"
-                    VerticalAlignment="Center"
-                    Width="260" Margin="4,0"/>
-        </Grid>
+        <controls:TitleBarControl x:Name="TitleBar"/>
+        
         <CommandBar Grid.Row="1" x:Name="PrimaryCommandBar" IsOpen="False" DefaultLabelPosition="Right" HorizontalAlignment="Left">
             <AppBarButton x:Name="addButton" Label="Add" Click="OnElementClicked">
                 <SymbolIcon Symbol="Add" />

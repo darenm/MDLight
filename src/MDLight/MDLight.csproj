@@ -13,6 +13,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Controls\MarkdownView.xaml" />
+    <None Remove="Controls\TitleBarControl.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,6 +49,11 @@
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="ViewModels\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\TitleBarControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <!-- 
