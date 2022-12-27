@@ -5,13 +5,12 @@ using System;
 
 using MDLight.Services;
 using MDLight.Utilities;
+using MDLight.ViewModels;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
-
-using Windows.Storage;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -34,10 +33,13 @@ namespace MDLight
 
             _host = Host.CreateDefaultBuilder()
                 .ConfigureServices((_, services) =>
-                    services.AddSingleton<INavigationService, NavigationService>())
+                    services
+                    .AddSingleton<IWindowsService, WindowsService>()
+                    .AddSingleton<INavigationService, NavigationService>()
+                    .AddSingleton<MainViewModel>())
                  .Build();
 
-            Services = _host.Services;
+            ServicesResolver.Services = _host.Services;
 
             SystemTheme = RequestedTheme;
             var appTheme = SettingsHelper.GetSetting(AppSettings.AppTheme);
@@ -71,19 +73,16 @@ namespace MDLight
         {
             m_window = new MainWindow();
             m_window.Activate();
-            AppWindow = WindowHelper.GetAppWindowForCurrentWindow(m_window);
-            MainWindow = m_window;
-            hWnd = WinRT.Interop.WindowNative.GetWindowHandle(m_window);
+            var windowService = ServicesResolver.Services.GetService<IWindowsService>();
+            windowService.AppWindow = WindowHelper.GetAppWindowForCurrentWindow(m_window);
+            windowService.MainWindow = m_window;
+            windowService.HWnd = WinRT.Interop.WindowNative.GetWindowHandle(m_window);
         }
 
         private Window m_window;
         private IHost _host;
 
-        public IServiceProvider Services { get; }
         public ApplicationTheme SystemTheme { get; }
         public bool IsSystemTheme { get; set; }
-        public AppWindow AppWindow { get; private set; }
-        public Window MainWindow { get; private set; }
-        public IntPtr hWnd { get; private set; }
     }
 }

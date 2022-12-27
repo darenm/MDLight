@@ -1,11 +1,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Threading.Tasks;
 
-using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
+using MDLight.Messages;
 using MDLight.Models;
 using MDLight.Services;
 using MDLight.Utilities;
@@ -17,14 +16,13 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 
-using Windows.Storage;
-
 namespace MDLight.Controls
 {
-    public sealed partial class MainPage : UserControl
+    public sealed partial class MainPage : Page
     {
+        private IWindowsService _windowsService;
         private INavigationService _navigationService;
-        private List<Document> _documents = new List<Document>();
+        private List<MarkdownDocument> _documents = new List<MarkdownDocument>();
         private Brush _orangeBrush = new SolidColorBrush(Colors.Orange);
 
         public event EventHandler<ElementTheme> ThemeChanged;
@@ -39,7 +37,6 @@ namespace MDLight.Controls
             DependencyProperty.Register("ShowSettings", typeof(bool), typeof(MainPage), new PropertyMetadata(false));
 
 
-
         public MainViewModel ViewModel
         {
             get { return (MainViewModel)GetValue(ViewModelProperty); }
@@ -50,196 +47,27 @@ namespace MDLight.Controls
             DependencyProperty.Register("ViewModel", typeof(MainViewModel), typeof(MainPage), new PropertyMetadata(null));
 
 
-        public RelayCommand OpenCommand
-        {
-            get { return (RelayCommand)GetValue(OpenCommandProperty); }
-            set { SetValue(OpenCommandProperty, value); }
-        }
-
-        public static readonly DependencyProperty OpenCommandProperty =
-            DependencyProperty.Register("OpenCommand", typeof(int), typeof(MainPage), new PropertyMetadata(null));
-
-
-
-        public RelayCommand NewCommand
-        {
-            get { return (RelayCommand)GetValue(NewCommandProperty); }
-            set { SetValue(NewCommandProperty, value); }
-        }
-
-        public static readonly DependencyProperty NewCommandProperty =
-            DependencyProperty.Register("NewCommand", typeof(RelayCommand), typeof(MainPage), new PropertyMetadata(null));
-
-        public RelayCommand SaveAsCommand
-        {
-            get { return (RelayCommand)GetValue(SaveAsCommandProperty); }
-            set { SetValue(SaveAsCommandProperty, value); }
-        }
-
-        public static readonly DependencyProperty SaveAsCommandProperty =
-            DependencyProperty.Register("SaveAsCommand", typeof(RelayCommand), typeof(MainPage), new PropertyMetadata(null));
-
-        public RelayCommand SaveCommand
-        {
-            get { return (RelayCommand)GetValue(SaveCommandProperty); }
-            set { SetValue(SaveCommandProperty, value); }
-        }
-
-        public static readonly DependencyProperty SaveCommandProperty =
-            DependencyProperty.Register("SaveCommand", typeof(RelayCommand), typeof(MainPage), new PropertyMetadata(null));
-
-        public RelayCommand EditCommand
-        {
-            get { return (RelayCommand)GetValue(EditCommandProperty); }
-            set { SetValue(EditCommandProperty, value); }
-        }
-
-        public static readonly DependencyProperty EditCommandProperty =
-            DependencyProperty.Register("EditCommand", typeof(RelayCommand), typeof(MainPage), new PropertyMetadata(null));
-
-
         public MainPage()
         {
             this.InitializeComponent();
 
             DataContext = this;
-            _navigationService = ((App)Application.Current).Services.GetService<INavigationService>();
-            _navigationService.OnBackButtonClicked += _navigationService_OnBackButtonClicked;
+            ViewModel = ServicesResolver.Services.GetService<MainViewModel>();
+            _windowsService = ServicesResolver.Services.GetService<IWindowsService>();
+            _navigationService = ServicesResolver.Services.GetService<INavigationService>();
 
-            OpenCommand = new RelayCommand(OpenCommand_Execute);
-            NewCommand = new RelayCommand(NewCommand_Execute);
-            EditCommand = new RelayCommand(EditCommand_Execute, EditCommand_CanExecute);
-            SaveCommand = new RelayCommand(SaveCommand_Execute, SaveCommand_CanExecute);
-            SaveAsCommand = new RelayCommand(SaveAsCommand_Execute, SaveAsCommand_CanExecute);
-
-        }
-
-        private bool SaveAsCommand_CanExecute()
-        {
-            return _documents.Count > 0;
-        }
-
-        private bool SaveCommand_CanExecute()
-        {
-            return _documents.Count > 0;
-        }
-
-        private bool EditCommand_CanExecute()
-        {
-            return _documents.Count > 0;
-        }
-
-        private void SaveAsCommand_Execute()
-        {
-        }
-
-        private async void SaveCommand_Execute()
-        {
-            if (NotesTabs.SelectedItem != null)
+            // Register a message in some module
+            WeakReferenceMessenger.Default.Register<ShowSettingsMessage>(this, (r, m) =>
             {
-                var markdownView = ((TabViewItem)NotesTabs.SelectedItem).Content as MarkdownView;
-                if (markdownView != null)
-                {
-                    markdownView.SetEdit(false);
-                    var document = markdownView.Document;
-                    await FileIO.WriteTextAsync(document.File, document.Contents);
-                }
-            }
+                // Handle the message here, with r being the recipient and m being the
+                // input message. Using the recipient passed as input makes it so that
+                // the lambda expression doesn't capture "this", improving performance.
+                OnSettingsClicked();
+            });
         }
 
-        private void EditCommand_Execute()
-        {
-            if (NotesTabs.SelectedItem != null)
-            {
-                var markdownView = ((TabViewItem)NotesTabs.SelectedItem).Content as MarkdownView;
-                if (markdownView != null)
-                {
-                    markdownView.SetEdit(true);
-                }
-            }
-        }
 
-        private async void OpenCommand_Execute()
-        {
-            var file = await ((App)Application.Current).MainWindow.PickFile(new string[] { ".md" });
-            if (file != null)
-            {
-                await OpenTab(file);
-            }
-
-            CheckCommands();
-        }
-
-        private void CheckCommands()
-        {
-            EditCommand.NotifyCanExecuteChanged();
-            SaveCommand.NotifyCanExecuteChanged();
-            SaveAsCommand.NotifyCanExecuteChanged();
-        }
-
-        private async Task OpenTab(StorageFile file)
-        {
-            var document = new Document()
-            {
-                FileName = file.Name,
-                File = file,
-                Contents = await FileIO.ReadTextAsync(file)
-            };
-
-            _documents.Add(document);
-
-            var newTab = CreateTab(document);
-            NotesTabs.TabItems.Add(newTab);
-            NotesTabs.SelectedItem = newTab;
-        }
-
-        private object CreateTab(Document document)
-        {
-            TabViewItem newItem = new TabViewItem
-            {
-                Header = document.Title,
-                IconSource = new SymbolIconSource() { Symbol = Symbol.Document },
-                Tag = document,
-                Content = new MarkdownView() { Tag = document },
-            };
-
-            newItem.IconSource.Foreground = _orangeBrush;
-
-            return newItem;
-        }
-
-        private void NewCommand_Execute()
-        {
-            var file = ((App)Application.Current).MainWindow.PickFile(new string[] { ".md" });
-        }
-
-        private void _navigationService_OnBackButtonClicked(object sender, System.EventArgs e)
-        {
-            ShowSettings = false;
-        }
-
-        private void myButton_Click(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void TabView_AddButtonClick(TabView sender, object args)
-        {
-            OpenCommand.Execute(null);
-        }
-
-        private void TabView_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
-        {
-            _documents.Remove(args.Tab.Tag as Document);
-            NotesTabs.TabItems.Remove(args.Item);
-            CheckCommands();
-        }
-
-        private void OnElementClicked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void onSettingsClicked(object sender, RoutedEventArgs e)
+        private void OnSettingsClicked()
         {
             _navigationService.CanGoBack = true;
             ShowSettings = true;
@@ -308,6 +136,11 @@ namespace MDLight.Controls
             }
 
             ThemeChanged?.Invoke(this, RootGrid.RequestedTheme);
+        }
+
+        public Visibility InvertVisibility(bool input)
+        {
+            return input ? Visibility.Collapsed : Visibility.Visible;
         }
     }
 }
