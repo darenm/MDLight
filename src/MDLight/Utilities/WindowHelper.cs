@@ -31,7 +31,7 @@ public static partial class WindowHelper
 
     public static void RegisterWindowMinMax(this Window window)
     {
-        //Get the Window's HWND
+        //Get the MainWindow's HWND
         var hwnd = GetWindowHandleForCurrentWindow(window);
 
         newWndProc = new NativeMethods.WinProc(WndProc);
@@ -59,7 +59,7 @@ public static partial class WindowHelper
     }
 
     /// <summary>
-    /// Set Window Width and Height
+    /// Set MainWindow Width and Height
     /// </summary>
     /// <param name="hwnd"></param>
     /// <param name="width"></param>
@@ -77,17 +77,17 @@ public static partial class WindowHelper
     }
 
     /// <summary>
-    /// allow the app to find the Window that contains an
+    /// allow the app to find the MainWindow that contains an
     /// arbitrary UIElement (GetWindowForElement).  To do this, we keep track
     /// of all active Windows.  The app code must call WindowHelper.CreateWindow
-    /// rather than "new Window" so we can keep track of all the relevant windows.
+    /// rather than "new MainWindow" so we can keep track of all the relevant windows.
     /// </summary>
     public static List<Window> ActiveWindows { get { return _activeWindows; } }
 
     private static List<Window> _activeWindows = new();
 
     /// <summary>
-    /// Get AppWindow For a Window
+    /// Get AppWindow For a MainWindow
     /// </summary>
     /// <param name="target"></param>
     /// <returns></returns>
@@ -97,7 +97,7 @@ public static partial class WindowHelper
     }
 
     /// <summary>
-    /// Get WindowHandle for a Window
+    /// Get WindowHandle for a MainWindow
     /// </summary>
     /// <param name="target"></param>
     /// <returns></returns>
@@ -108,7 +108,7 @@ public static partial class WindowHelper
     }
 
     /// <summary>
-    /// Get WindowId from Window
+    /// Get WindowId from MainWindow
     /// </summary>
     /// <param name="target"></param>
     /// <returns></returns>
@@ -119,10 +119,10 @@ public static partial class WindowHelper
     }
 
     /// <summary>
-    /// allow the app to find the Window that contains an
+    /// allow the app to find the MainWindow that contains an
     /// arbitrary UIElement (GetWindowForElement).  To do this, we keep track
     /// of all active Windows.  The app code must call WindowHelper.CreateWindow
-    /// rather than "new Window" so we can keep track of all the relevant windows.
+    /// rather than "new MainWindow" so we can keep track of all the relevant windows.
     /// </summary>
     /// <param name="element"></param>
     /// <returns></returns>
@@ -142,7 +142,7 @@ public static partial class WindowHelper
     }
 
     /// <summary>
-    /// Create a new Window
+    /// Create a new MainWindow
     /// </summary>
     /// <returns></returns>
     public static Window CreateWindow()
@@ -154,7 +154,7 @@ public static partial class WindowHelper
 
     /// <summary>
     /// track of all active Windows.  The app code must call WindowHelper.CreateWindow
-    /// rather than "new Window" so we can keep track of all the relevant windows.
+    /// rather than "new MainWindow" so we can keep track of all the relevant windows.
     /// </summary>
     /// <param name="window"></param>
     public static void TrackWindow(Window window)

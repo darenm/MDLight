@@ -1,19 +1,21 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
-using Microsoft.UI;
 using System;
-
-using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml;
 using System.Collections.Generic;
-using WinRT.Interop;
 using System.Runtime.InteropServices;
+
 using MDLight.Services;
-using Microsoft.Extensions.DependencyInjection;
-using Windows.UI.Core;
 using MDLight.Utilities;
+using MDLight.ViewModels;
+
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+
+using WinRT.Interop;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -27,10 +29,13 @@ public sealed partial class TitleBarControl : UserControl
     private AppWindow _appWindow;
     private INavigationService _navigationService;
 
+    public MainViewModel VM { get; set; }
+
     public TitleBarControl()
     {
         this.InitializeComponent();
-        _navigationService = ((App)App.Current).Services.GetService<INavigationService>();
+        VM = ServicesResolver.Services.GetService<MainViewModel>();
+        _navigationService = ServicesResolver.Services.GetService<INavigationService>();
         _navigationService.PropertyChanged += _navigationService_PropertyChanged;
         this.ActualThemeChanged += TitleBarControl_ActualThemeChanged;
     }
@@ -247,6 +252,11 @@ public sealed partial class TitleBarControl : UserControl
     private void OnGoBackClicked(object sender, RoutedEventArgs e)
     {
         _navigationService.CanGoBack = false;
-        _navigationService?.RaiseOnBackButtonClicked(this, EventArgs.Empty);
+        VM.ShowSettings = false;
+    }
+
+    public bool Invert(bool input)
+    {
+        return !input;
     }
 }

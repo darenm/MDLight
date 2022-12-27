@@ -10,7 +10,7 @@ using Windows.Storage;
 
 namespace MDLight.Models
 {
-    internal class Document : ObservableObject
+    public class MarkdownDocument : ObservableObject
     {
         public string FileName { get; set; }
 
@@ -21,8 +21,11 @@ namespace MDLight.Models
         private string _contents;
         public string Contents { get => _contents; set => SetProperty(ref _contents, value); }
 
-        public byte[] FileBytes => string.IsNullOrEmpty(Contents)? System.Array.Empty<byte>() : Encoding.UTF8.GetBytes(Contents);
+        public byte[] FileBytes => string.IsNullOrEmpty(Contents) ? System.Array.Empty<byte>() : Encoding.UTF8.GetBytes(Contents);
 
         public string MarkDown => Markdown.ToHtml(Contents);
+
+        private bool _isEdit;
+        public bool IsEdit { get => _isEdit; set => SetProperty(ref _isEdit, value); }
     }
 }

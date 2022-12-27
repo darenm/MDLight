@@ -13,39 +13,25 @@ namespace MDLight.Controls
 {
     public sealed partial class MarkdownView : UserControl
     {
-        private Document _document;
+        public MarkdownDocument Document
+        {
+            get { return (MarkdownDocument)GetValue(DocumentProperty); }
+            set { SetValue(DocumentProperty, value); }
+        }
 
-        internal Document Document { get => _document; set => _document = value; }
+        // Using a DependencyProperty as the backing store for Document.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DocumentProperty =
+            DependencyProperty.Register("Document", typeof(MarkdownDocument), typeof(MarkdownView), new PropertyMetadata(null));
+
 
         public MarkdownView()
         {
             this.InitializeComponent();
-            this.Loaded += MarkdownView_Loaded;
         }
 
-        private void MarkdownView_Loaded(object sender, RoutedEventArgs e)
+        public Visibility InvertVisibility(bool input)
         {
-            if (Tag is Document document)
-            {
-                Document = document;
-                DataContext= Document;
-                SetEdit(false);
-            }
+            return input ? Visibility.Collapsed : Visibility.Visible;
         }
-
-        public void SetEdit(bool isEditing)
-        {
-            if (isEditing)
-            {
-                MarkdownText.Visibility= Visibility.Collapsed;
-                EditingText.Visibility= Visibility.Visible;
-            }
-            else
-            {
-                MarkdownText.Visibility= Visibility.Visible;
-                EditingText.Visibility= Visibility.Collapsed;
-            }
-        }
-
     }
 }

@@ -61,7 +61,7 @@ namespace MDLight.Utilities
                 }
 
                 // Enable the system backdrop.
-                // Note: Be sure to have "using WinRT;" to support the Window.As<...>() call.
+                // Note: Be sure to have "using WinRT;" to support the MainWindow.As<...>() call.
                 _backdropController.AddSystemBackdropTarget(_appWindow.As<Microsoft.UI.Composition.ICompositionSupportsSystemBackdrop>());
                 _backdropController.SetSystemBackdropConfiguration(_configurationSource);
                 return true; // succeeded
