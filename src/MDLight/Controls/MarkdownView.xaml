@@ -13,7 +13,10 @@
 
     <Grid>
         <ScrollViewer Padding="8">
-            <TextBlock x:Name="Content" TextWrapping="Wrap"/>
+            <Grid>
+                <controls:MarkdownTextBlock x:Name="MarkdownText" TextWrapping="Wrap" Text="{Binding Contents, Mode=OneWay}"/>
+                <TextBox x:Name="EditingText" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding Contents, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
         </ScrollViewer>
     </Grid>
 </UserControl>

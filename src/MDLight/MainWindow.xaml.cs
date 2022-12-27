@@ -33,7 +33,7 @@ namespace MDLight
         private void SetupBackdrop()
         {
             _backDropHelper = new WindowBackdropHelper<MainWindow>(this);
-            _backDropHelper.TrySetSystemBackdrop(BackdropType.MicaAlt);
+            _backDropHelper.TrySetSystemBackdrop(BackdropType.Mica);
         }
 
         private void SetupTitle()

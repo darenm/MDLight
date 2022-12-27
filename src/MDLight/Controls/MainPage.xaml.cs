@@ -103,7 +103,7 @@ namespace MDLight.Controls
             this.InitializeComponent();
 
             DataContext = this;
-            _navigationService = ((App)App.Current).Services.GetService<INavigationService>();
+            _navigationService = ((App)Application.Current).Services.GetService<INavigationService>();
             _navigationService.OnBackButtonClicked += _navigationService_OnBackButtonClicked;
 
             OpenCommand = new RelayCommand(OpenCommand_Execute);
@@ -133,12 +133,30 @@ namespace MDLight.Controls
         {
         }
 
-        private void SaveCommand_Execute()
+        private async void SaveCommand_Execute()
         {
+            if (NotesTabs.SelectedItem != null)
+            {
+                var markdownView = ((TabViewItem)NotesTabs.SelectedItem).Content as MarkdownView;
+                if (markdownView != null)
+                {
+                    markdownView.SetEdit(false);
+                    var document = markdownView.Document;
+                    await FileIO.WriteTextAsync(document.File, document.Contents);
+                }
+            }
         }
 
         private void EditCommand_Execute()
         {
+            if (NotesTabs.SelectedItem != null)
+            {
+                var markdownView = ((TabViewItem)NotesTabs.SelectedItem).Content as MarkdownView;
+                if (markdownView != null)
+                {
+                    markdownView.SetEdit(true);
+                }
+            }
         }
 
         private async void OpenCommand_Execute()
@@ -164,6 +182,7 @@ namespace MDLight.Controls
             var document = new Document()
             {
                 FileName = file.Name,
+                File = file,
                 Contents = await FileIO.ReadTextAsync(file)
             };
 

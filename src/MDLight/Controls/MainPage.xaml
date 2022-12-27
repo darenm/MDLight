@@ -28,16 +28,16 @@
                     <SymbolIcon Symbol="Document" />
                 </AppBarButton>
                 <AppBarButton x:Name="openButton" Label="Open" Command="{Binding OpenCommand}">
-                    <SymbolIcon Symbol="OpenFile" Foreground="Orange" />
+                    <SymbolIcon Symbol="OpenFile" Foreground="OrangeRed" />
                 </AppBarButton>
                 <AppBarButton x:Name="editButton" Label="Edit" Command="{Binding EditCommand}">
-                    <SymbolIcon Symbol="Edit" Foreground="LightGreen"/>
+                    <SymbolIcon Symbol="Edit" Foreground="Green"/>
                 </AppBarButton>
                 <AppBarButton x:Name="saveButton"  Label="Save" Command="{Binding SaveCommand}">
-                    <SymbolIcon Symbol="Save" Foreground="CornflowerBlue"/>
+                    <SymbolIcon Symbol="Save" Foreground="Blue"/>
                 </AppBarButton>
                 <AppBarButton x:Name="saveAsButton"  Label="Save As" Command="{Binding SaveAsCommand}">
-                    <SymbolIcon Symbol="Rename" Foreground="CornflowerBlue"/>
+                    <SymbolIcon Symbol="Rename" Foreground="Blue"/>
                 </AppBarButton>
             </CommandBar>
             <CommandBar  Grid.Row="0" x:Name="SecondaryCommandBar" IsOpen="False" DefaultLabelPosition="Right" HorizontalAlignment="Right">
