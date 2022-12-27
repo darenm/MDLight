@@ -250,14 +250,29 @@ namespace MDLight.Controls
             }
             else
             {
-                switch (((App)Application.Current).RequestedTheme)
+                if (RootGrid.RequestedTheme == ElementTheme.Default)
                 {
-                    case ApplicationTheme.Light:
-                        Light.IsChecked = true;
-                        break;
-                    case ApplicationTheme.Dark:
-                        Dark.IsChecked = true;
-                        break;
+                    switch (((App)Application.Current).RequestedTheme)
+                    {
+                        case ApplicationTheme.Light:
+                            Light.IsChecked = true;
+                            break;
+                        case ApplicationTheme.Dark:
+                            Dark.IsChecked = true;
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (RootGrid.RequestedTheme)
+                    {
+                        case ElementTheme.Light:
+                            Light.IsChecked = true;
+                            break;
+                        case ElementTheme.Dark:
+                            Dark.IsChecked = true;
+                            break;
+                    }
                 }
             }
         }
