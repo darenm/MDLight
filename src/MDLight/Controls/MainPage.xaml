@@ -18,6 +18,24 @@
             <converters:VisibilityToBoolConverter x:Key="VisibilityToBoolConverter" />
         </Grid.Resources>
 
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600"/>
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="AboutPanel.(RelativePanel.Below)" Value="Title"/>
+                        <Setter Target="AboutPanel.(RelativePanel.AlignRightWithPanel)" Value="True"/>
+                        <Setter Target="AboutPanel.(RelativePanel.AlignLeftWithPanel)" Value="False"/>
+                        <Setter Target="SettingsPanel.(RelativePanel.AlignRightWithPanel)" Value="False"/>
+                        <Setter Target="SettingsPanel.(RelativePanel.LeftOf)" Value="AboutPanel"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
         <Grid x:Name="NotesGrid"
               Visibility="{x:Bind Path=InvertVisibility(ViewModel.ShowSettings), Mode=OneWay}">
             <Grid.RowDefinitions>
@@ -51,25 +69,14 @@
         <Grid x:Name="SettingsGrid"
               Visibility="{x:Bind Path=ViewModel.ShowSettings, Mode=OneWay}">
             <ScrollViewer Padding="60">
-                <ctkc:DockPanel>
-                    <TextBlock ctkc:DockPanel.Dock="Top"
+                <RelativePanel>
+
+                    <TextBlock x:Name="Title"
                                Style="{StaticResource TitleLargeTextBlockStyle}"
                                Text="Settings"
                                Margin="0,0,0,30" />
 
-                    <StackPanel ctkc:DockPanel.Dock="Right"
-                                Width="200">
-                        <StackPanel.Resources>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="Margin"
-                                        Value="0,8" />
-                            </Style>
-                        </StackPanel.Resources>
-                        <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}">About this app</TextBlock>
-                        <TextBlock TextWrapping="Wrap">MDLight - Lightweight Markdown preview and editing.</TextBlock>
-                    </StackPanel>
-
-                    <StackPanel>
+                    <StackPanel x:Name="SettingsPanel" RelativePanel.Below="Title" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
                         <Expander x:Name="AppThemeExpander"
                                   HorizontalAlignment="Stretch"
                                   HorizontalContentAlignment="Left"
@@ -148,9 +155,24 @@
                         </Expander>
                     </StackPanel>
 
-                </ctkc:DockPanel>
+                    <StackPanel x:Name="AboutPanel"
+                                Width="200"
+                                RelativePanel.AlignLeftWithPanel="True" 
+                                RelativePanel.Below="SettingsPanel">
+                        <StackPanel.Resources>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Margin"
+                                        Value="0,8" />
+                            </Style>
+                        </StackPanel.Resources>
+                        <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}">About this app</TextBlock>
+                        <TextBlock TextWrapping="Wrap">MDLight - Lightweight Markdown preview and editing.</TextBlock>
+                        <TextBlock TextWrapping="Wrap">Written by Daren May</TextBlock>
+                        <TextBlock TextWrapping="Wrap">Copyright &#x00A9; CustomMayd, LLC 2022</TextBlock>
+                    </StackPanel>
+
+                </RelativePanel>
             </ScrollViewer>
         </Grid>
-
     </Grid>
 </Page>

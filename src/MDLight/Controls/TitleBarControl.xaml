@@ -21,7 +21,7 @@
             <ColumnDefinition x:Name="LeftDragColumn"
                               Width="*" />
             <ColumnDefinition x:Name="SearchColumn"
-                              Width="Auto" />
+                              Width="7*" />
             <ColumnDefinition x:Name="RightDragColumn"
                               Width="*" />
             <ColumnDefinition x:Name="RightPaddingColumn"
@@ -50,14 +50,15 @@
         <CommandBar Grid.Column="4"
                     x:Name="PrimaryCommandBar"
                     IsOpen="False"
-                    IsEnabled="{x:Bind Invert(VM.ShowSettings), Mode=OneWay}"
+                    Visibility="{x:Bind Invert(VM.ShowSettings), Mode=OneWay}"
+                    IsDynamicOverflowEnabled="True"
                     DefaultLabelPosition="Right"
                     HorizontalAlignment="Left">
-            <AppBarButton x:Name="addButton"
+            <!--<AppBarButton x:Name="addButton"
                           Label="New"
                           Command="{x:Bind VM.NewCommand}">
                 <SymbolIcon Symbol="Document" />
-            </AppBarButton>
+            </AppBarButton>-->
             <AppBarButton x:Name="openButton"
                           Label="Open"
                           Command="{x:Bind VM.OpenCommand}">
@@ -76,12 +77,12 @@
                 <SymbolIcon Symbol="Save"
                             Foreground="Blue" />
             </AppBarButton>
-            <AppBarButton x:Name="saveAsButton"
+            <!--<AppBarButton x:Name="saveAsButton"
                           Label="Save As"
                           Command="{x:Bind VM.SaveAsCommand}">
                 <SymbolIcon Symbol="Rename"
                             Foreground="Blue" />
-            </AppBarButton>
+            </AppBarButton>-->
             <AppBarButton x:Name="settingsButton"
                           Icon="Setting"
                           Label="Settings"

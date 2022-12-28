@@ -255,8 +255,8 @@ public sealed partial class TitleBarControl : UserControl
         VM.ShowSettings = false;
     }
 
-    public bool Invert(bool input)
+    public Visibility Invert(bool input)
     {
-        return !input;
+        return input ? Visibility.Collapsed : Visibility.Visible;
     }
 }
