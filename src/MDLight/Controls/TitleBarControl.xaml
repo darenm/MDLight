@@ -19,9 +19,10 @@
             <ColumnDefinition x:Name="TitleColumn"
                               Width="Auto" />
             <ColumnDefinition x:Name="LeftDragColumn"
-                              Width="*" />
+                              Width="2*" />
             <ColumnDefinition x:Name="SearchColumn"
-                              Width="7*" />
+                              MinWidth="150"
+                              Width="6*" />
             <ColumnDefinition x:Name="RightDragColumn"
                               Width="*" />
             <ColumnDefinition x:Name="RightPaddingColumn"
