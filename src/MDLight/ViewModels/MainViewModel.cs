@@ -62,7 +62,7 @@ namespace MDLight.ViewModels
             }
         }
 
-        public MarkdownDocument CurrentDocument => Documents.Any() ? Documents[SelectedTabIndex] : null;
+        public MarkdownDocument CurrentDocument => Documents.Any() && SelectedTabIndex >=0 ? Documents[SelectedTabIndex] : null;
         public bool CurrentDocumentIsEditing => CurrentDocument != null ? CurrentDocument.IsEdit : false;
 
         public MainViewModel(IWindowsService windowsService)
