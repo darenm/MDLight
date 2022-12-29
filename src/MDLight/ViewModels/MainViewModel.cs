@@ -58,10 +58,12 @@ namespace MDLight.ViewModels
             {
                 SetProperty(ref _selectedTabIdex, value);
                 OnPropertyChanged(nameof(CurrentDocument));
+                OnPropertyChanged(nameof(CurrentDocumentIsEditing));
             }
         }
 
         public MarkdownDocument CurrentDocument => Documents.Any() ? Documents[SelectedTabIndex] : null;
+        public bool CurrentDocumentIsEditing => CurrentDocument != null ? CurrentDocument.IsEdit : false;
 
         public MainViewModel(IWindowsService windowsService)
         {
@@ -194,6 +196,7 @@ namespace MDLight.ViewModels
             EditCommand.NotifyCanExecuteChanged();
             SaveCommand.NotifyCanExecuteChanged();
             SaveAsCommand.NotifyCanExecuteChanged();
+            OnPropertyChanged(nameof(CurrentDocumentIsEditing));
         }
     }
 }

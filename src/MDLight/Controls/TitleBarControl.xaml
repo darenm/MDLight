@@ -68,7 +68,7 @@
             </AppBarButton>
             <AppBarToggleButton x:Name="editButton"
                                 Label="Edit"
-                                IsChecked="{x:Bind VM.CurrentDocument.IsEdit, Mode=OneWay}"
+                                IsChecked="{x:Bind VM.CurrentDocumentIsEditing, Mode=OneWay}"
                                 Command="{x:Bind VM.EditCommand}">
                 <SymbolIcon Symbol="Edit"
                             Foreground="Green" />
