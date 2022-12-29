@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reflection;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -30,13 +33,13 @@ namespace MDLight.ViewModels
 
         private RelayCommand _openCommand;
         public RelayCommand OpenCommand { get => _openCommand; set => SetProperty(ref _openCommand, value); }
- 
+
         private RelayCommand _newCommand;
         public RelayCommand NewCommand { get => _newCommand; set => SetProperty(ref _newCommand, value); }
 
         private RelayCommand _editCommand;
         public RelayCommand EditCommand { get => _editCommand; set => SetProperty(ref _editCommand, value); }
- 
+
         private RelayCommand _saveCommand;
         public RelayCommand SaveCommand { get => _saveCommand; set => SetProperty(ref _saveCommand, value); }
 
@@ -49,7 +52,16 @@ namespace MDLight.ViewModels
         public ObservableCollection<MarkdownDocument> Documents = new ObservableCollection<MarkdownDocument>();
 
         private int _selectedTabIdex = 0;
-        public int SelectedTabIndex { get => _selectedTabIdex; set => SetProperty(ref _selectedTabIdex, value); }
+        public int SelectedTabIndex
+        {
+            get => _selectedTabIdex; set
+            {
+                SetProperty(ref _selectedTabIdex, value);
+                OnPropertyChanged(nameof(CurrentDocument));
+            }
+        }
+
+        public MarkdownDocument CurrentDocument => Documents.Any() ? Documents[SelectedTabIndex] : null;
 
         public MainViewModel(IWindowsService windowsService)
         {
@@ -100,12 +112,31 @@ namespace MDLight.ViewModels
         private async void SaveCommand_Execute()
         {
             Documents[SelectedTabIndex].IsEdit = false;
-            await FileIO.WriteTextAsync(Documents[SelectedTabIndex].File, Documents[SelectedTabIndex].Contents);
+            if (Documents[SelectedTabIndex].File != null)
+            {
+                await FileIO.WriteTextAsync(Documents[SelectedTabIndex].File, Documents[SelectedTabIndex].Contents);
+            }
+            else
+            {
+                var saveFile = await _windowsService.MainWindow.PickFileSaveAs(
+                    new System.Collections.Generic.Dictionary<string, string[]> { { "Markdown", new[] { ".md" } } },
+                    Documents[SelectedTabIndex].FileBytes,
+                    "Untitled.md");
+                if (saveFile != null)
+                {
+                    Documents[SelectedTabIndex].File = saveFile;
+                }
+            }
         }
 
         private void EditCommand_Execute()
         {
-            Documents[SelectedTabIndex].IsEdit = true;
+            Documents[SelectedTabIndex].IsEdit = !Documents[SelectedTabIndex].IsEdit;
+
+            if (!Documents[SelectedTabIndex].IsEdit)
+            {
+                SaveCommand_Execute();
+            }
         }
 
         public void CloseTabRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
@@ -145,7 +176,17 @@ namespace MDLight.ViewModels
 
         private void NewCommand_Execute()
         {
-            var file = _windowsService.MainWindow.PickFile(new string[] { ".md" });
+            var document = new MarkdownDocument()
+            {
+                FileName = "Untitled",
+                File = null,
+                Contents = ""
+            };
+
+            Documents.Add(document);
+            SelectedTabIndex = Documents.Count - 1;
+            Documents[SelectedTabIndex].IsEdit = true;
+            CheckCommands();
         }
 
         private void CheckCommands()

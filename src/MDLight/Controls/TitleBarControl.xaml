@@ -55,23 +55,24 @@
                     IsDynamicOverflowEnabled="True"
                     DefaultLabelPosition="Right"
                     HorizontalAlignment="Center">
-            <!--<AppBarButton x:Name="addButton"
+            <AppBarButton x:Name="addButton"
                           Label="New"
                           Command="{x:Bind VM.NewCommand}">
                 <SymbolIcon Symbol="Document" />
-            </AppBarButton>-->
+            </AppBarButton>
             <AppBarButton x:Name="openButton"
                           Label="Open"
                           Command="{x:Bind VM.OpenCommand}">
                 <SymbolIcon Symbol="OpenFile"
                             Foreground="OrangeRed" />
             </AppBarButton>
-            <AppBarButton x:Name="editButton"
-                          Label="Edit"
-                          Command="{x:Bind VM.EditCommand}">
+            <AppBarToggleButton x:Name="editButton"
+                                Label="Edit"
+                                IsChecked="{x:Bind VM.CurrentDocument.IsEdit, Mode=OneWay}"
+                                Command="{x:Bind VM.EditCommand}">
                 <SymbolIcon Symbol="Edit"
                             Foreground="Green" />
-            </AppBarButton>
+            </AppBarToggleButton>
             <AppBarButton x:Name="saveButton"
                           Label="Save"
                           Command="{x:Bind VM.SaveCommand}">
