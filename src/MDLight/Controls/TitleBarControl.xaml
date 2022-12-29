@@ -19,10 +19,10 @@
             <ColumnDefinition x:Name="TitleColumn"
                               Width="Auto" />
             <ColumnDefinition x:Name="LeftDragColumn"
-                              Width="2*" />
+                              Width="*" />
             <ColumnDefinition x:Name="SearchColumn"
                               MinWidth="150"
-                              Width="6*" />
+                              Width="3*" />
             <ColumnDefinition x:Name="RightDragColumn"
                               Width="*" />
             <ColumnDefinition x:Name="RightPaddingColumn"
@@ -54,7 +54,7 @@
                     Visibility="{x:Bind Invert(VM.ShowSettings), Mode=OneWay}"
                     IsDynamicOverflowEnabled="True"
                     DefaultLabelPosition="Right"
-                    HorizontalAlignment="Left">
+                    HorizontalAlignment="Center">
             <!--<AppBarButton x:Name="addButton"
                           Label="New"
                           Command="{x:Bind VM.NewCommand}">

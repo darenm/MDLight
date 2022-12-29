@@ -47,6 +47,7 @@
                      Grid.Row="1"
                      TabItemsSource="{x:Bind ViewModel.Documents, Mode=OneWay}"
                      SelectedIndex="{x:Bind ViewModel.SelectedTabIndex, Mode=TwoWay}"
+                     VerticalAlignment="Stretch"
                      AddTabButtonCommand="{x:Bind ViewModel.OpenCommand}"
                      TabCloseRequested="{x:Bind ViewModel.CloseTabRequested}">
 

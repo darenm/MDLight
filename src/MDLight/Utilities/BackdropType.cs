@@ -1,6 +1,6 @@
 ﻿namespace MDLight.Utilities
 {
-    internal enum BackdropType
+    public enum BackdropType
     {
         Acrylic,
         Mica,
