@@ -110,7 +110,7 @@
                                 </StackPanel>
                             </Expander.Content>
                         </Expander>
-                        <Expander x:Name="FontExpander"
+                        <!--<Expander x:Name="FontExpander"
                                   HorizontalAlignment="Stretch"
                                   HorizontalContentAlignment="Stretch"
                                   Margin="0,0,60,8">
@@ -153,7 +153,7 @@
                                                HorizontalAlignment="Center">Markdown makes life simple</TextBlock>
                                 </Grid>
                             </Expander.Content>
-                        </Expander>
+                        </Expander>-->
                     </StackPanel>
 
                     <StackPanel x:Name="AboutPanel"
